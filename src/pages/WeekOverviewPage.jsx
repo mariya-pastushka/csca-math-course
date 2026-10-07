@@ -47,14 +47,23 @@ export default function WeekOverviewPage({ navigate, progress, progressPercent }
         <section className="lesson-list">
           {week1.lessons.map((lesson) => {
             const percent = lessonPercent(lesson)
-            const firstIncomplete = lesson.subtopics.find((topic) => !progress.scores[topic.id]) || lesson.subtopics[0]
+            const lessonResumeTarget = lesson.subtopics
+              .flatMap((topic) => stageOrder.map((stage) => ({ topic, stage })))
+              .find(({ topic, stage }) => !progress.completed[topic.id + ':' + stage])
+            const lessonPath = lessonResumeTarget
+              ? '/week-1/' + lessonResumeTarget.topic.id + '/' + lessonResumeTarget.stage
+              : '/week-1/' + lesson.subtopics[0].id + '/theory'
             return (
               <article className="lesson-card" key={lesson.id}>
                 <div className="lesson-card-top">
                   <span className="lesson-card-number">0{lesson.number}</span>
                   <div className="lesson-card-title">
                     <span>Урок {lesson.number}</span>
-                    <h2>{lesson.titleRu}</h2>
+                    <h2>
+                      <button className="lesson-title-button" onClick={() => navigate('/week-1/' + lesson.subtopics[0].id + '/theory')}>
+                        {lesson.titleRu}
+                      </button>
+                    </h2>
                     <p>{lesson.description}</p>
                   </div>
                   <div className="lesson-percentage">{percent}%</div>
@@ -62,7 +71,7 @@ export default function WeekOverviewPage({ navigate, progress, progressPercent }
 
                 <div className="lesson-subtopics">
                   {lesson.subtopics.map((topic, index) => {
-                    const done = Boolean(progress.scores[topic.id])
+                    const done = stageOrder.every((stage) => Boolean(progress.completed[topic.id + ':' + stage]))
                     return (
                       <button key={topic.id} onClick={() => navigate('/week-1/' + topic.id + '/theory')}>
                         <span className={'subtopic-number ' + (done ? 'is-done' : '')}>{done ? <Check size={15} /> : index + 1}</span>
@@ -78,7 +87,7 @@ export default function WeekOverviewPage({ navigate, progress, progressPercent }
 
                 <div className="lesson-card-footer">
                   <ProgressBar value={percent} compact />
-                  <button onClick={() => navigate('/week-1/' + firstIncomplete.id + '/theory')}>
+                  <button onClick={() => navigate(lessonPath)}>
                     <Book size={18} />
                     {percent === 100 ? 'Повторить урок' : percent ? 'Продолжить' : 'Начать урок'}
                   </button>

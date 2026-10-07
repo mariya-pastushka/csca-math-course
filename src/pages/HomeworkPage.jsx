@@ -4,8 +4,9 @@ import ProgressBar from '../components/ProgressBar'
 import { ArrowLeft, ArrowRight } from '../components/Icons'
 import { PageHeading } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
+import { getNextSubtopic } from '../data/week1'
 
-export default function HomeworkPage({ topic, navigate, progress, onFinish }) {
+export default function HomeworkPage({ topic, navigate, progress, onFinish, onSkip }) {
   const questions = useMemo(() => prepareQuestions(topic.homeworkQuestions, true), [topic.id])
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -16,6 +17,12 @@ export default function HomeworkPage({ topic, navigate, progress, onFinish }) {
   const isChecked = Boolean(checked[current.id])
   const isCorrect = isCorrectAnswer(value, current.answer)
   const answeredCount = Object.keys(checked).length
+  const nextTopic = getNextSubtopic(topic.id)
+
+  const skip = () => {
+    onSkip(topic.id, 'homework')
+    navigate(nextTopic ? '/week-1/' + nextTopic.id + '/theory' : '/week-1/final-test')
+  }
 
   const viewResult = () => {
     const attempts = questions.map((item) => ({
@@ -38,7 +45,7 @@ export default function HomeworkPage({ topic, navigate, progress, onFinish }) {
 
   return (
     <div className="content-page lesson-content-page homework-page">
-      <SubtopicHeader topic={topic} stage="homework" navigate={navigate} progress={progress} />
+      <SubtopicHeader topic={topic} stage="homework" navigate={navigate} progress={progress} onSkip={skip} />
       <div className="lesson-container narrow-container">
         <PageHeading
           eyebrow={'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number}

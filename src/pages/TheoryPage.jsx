@@ -2,16 +2,20 @@ import { MiniExample, RuleCard, TheoryCard, VocabularyCard } from '../components
 import { LessonNavigation, PageHeading, SectionTitle } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
 
-export default function TheoryPage({ topic, navigate, progress, onComplete }) {
+export default function TheoryPage({ topic, navigate, progress, onComplete, onSkip }) {
   const nextPath = '/week-1/' + topic.id + '/examples'
   const complete = () => {
     onComplete(topic.id, 'theory')
     navigate(nextPath)
   }
+  const skip = () => {
+    onSkip(topic.id, 'theory')
+    navigate(nextPath)
+  }
 
   return (
     <div className="content-page lesson-content-page">
-      <SubtopicHeader topic={topic} stage="theory" navigate={navigate} progress={progress} />
+      <SubtopicHeader topic={topic} stage="theory" navigate={navigate} progress={progress} onSkip={skip} />
       <div className="lesson-container">
         <PageHeading
           eyebrow={'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Теория'}

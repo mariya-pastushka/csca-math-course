@@ -705,6 +705,12 @@ a {
   color: var(--accent);
 }
 
+.stage-dot.is-skipped {
+  border-color: rgba(239, 194, 109, 0.62);
+  color: #efc26d;
+  font-size: 10px;
+}
+
 .sidebar-final {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -1026,6 +1032,25 @@ a {
   letter-spacing: -0.035em;
 }
 
+.lesson-title-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lesson-title-button:hover {
+  color: #526044;
+  text-decoration: underline;
+  text-decoration-color: #afca54;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
 .lesson-card-title p {
   max-width: 630px;
   margin: 0;
@@ -1222,6 +1247,13 @@ a {
   gap: 5px;
 }
 
+.subtopic-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
 .subtopic-stage-nav button {
   display: flex;
   align-items: center;
@@ -1254,6 +1286,43 @@ a {
   border-color: var(--dark);
   background: var(--dark);
   color: var(--accent);
+}
+
+.subtopic-stage-nav button > span.is-skipped {
+  border-color: #c49b54;
+  color: #9c6d1f;
+}
+
+.subtopic-stage-nav button.is-active > span.is-skipped {
+  border-color: #6d5223;
+  background: #6d5223;
+  color: #fff4da;
+}
+
+.stage-skip-button,
+.test-skip-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid #bdc3b8;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  color: #697168;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.stage-skip-button:hover,
+.test-skip-button:hover {
+  border-color: #68755d;
+  background: #f7f8f3;
+  color: #35402f;
 }
 
 .learning-intro {
@@ -1839,26 +1908,88 @@ a {
   margin-top: 26px;
 }
 
-.number-answer > span {
+.number-answer > label {
   color: #717970;
   font-size: 10px;
   font-weight: 700;
+}
+
+.math-input-shell {
+  overflow: hidden;
+  border: 1px solid #ccd1c7;
+  border-radius: 11px;
+  background: #fafaf6;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.math-input-shell:focus-within {
+  border-color: #68755d;
+  box-shadow: 0 0 0 3px rgba(104, 117, 93, 0.1);
 }
 
 .number-answer input {
   width: 100%;
   height: 54px;
   padding: 0 15px;
-  border: 1px solid #ccd1c7;
-  border-radius: 9px;
+  border: 0;
+  border-bottom: 1px solid #e0e3dc;
+  border-radius: 0;
   outline: none;
-  background: #fafaf6;
-  font-size: 15px;
+  background: transparent;
+  font-size: 16px;
 }
 
 .number-answer input:focus {
-  border-color: #68755d;
-  box-shadow: 0 0 0 3px rgba(104, 117, 93, 0.1);
+  border-color: #d2d7cd;
+  box-shadow: none;
+}
+
+.math-input-toolbar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px;
+  background: #eef0e9;
+  scrollbar-width: thin;
+}
+
+.math-input-toolbar button {
+  display: grid;
+  flex: 0 0 auto;
+  min-width: 42px;
+  min-height: 38px;
+  place-items: center;
+  padding: 0 10px;
+  border: 1px solid #cbd0c6;
+  border-radius: 8px;
+  background: #fcfcf8;
+  color: #30392b;
+  font-family: 'Manrope', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.math-input-toolbar button:hover,
+.math-input-toolbar button:focus-visible {
+  border-color: #7b876f;
+  background: #ffffff;
+}
+
+.math-input-toolbar button.math-key-erase {
+  color: #84633a;
+}
+
+.math-input-help {
+  margin: 0;
+  color: #858c82;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.math-input-help strong {
+  color: #5e6858;
 }
 
 .check-button {
@@ -2293,6 +2424,10 @@ a {
   font-size: 12px;
 }
 
+.test-skip-button {
+  margin-top: 18px;
+}
+
 .test-progress {
   margin: 31px 0 13px;
   padding: 16px 18px;
@@ -2423,6 +2558,11 @@ a {
     gap: 8px;
     padding-top: 10px;
     padding-bottom: 10px;
+  }
+
+  .subtopic-header-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
@@ -2646,7 +2786,7 @@ a {
   }
 
   .subtopic-header {
-    overflow-x: auto;
+    overflow-x: hidden;
     padding: 10px 17px;
   }
 
@@ -2655,7 +2795,24 @@ a {
   }
 
   .subtopic-stage-nav {
-    min-width: max-content;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .subtopic-header-actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    overflow: visible;
+  }
+
+  .stage-skip-button {
+    align-self: flex-end;
+    min-height: 40px;
+    padding-right: 15px;
+    padding-left: 15px;
   }
 
   .subtopic-stage-nav button {
@@ -2709,6 +2866,11 @@ a {
 
   .question-card {
     padding: 20px 16px;
+  }
+
+  .math-input-toolbar button {
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .question-label {

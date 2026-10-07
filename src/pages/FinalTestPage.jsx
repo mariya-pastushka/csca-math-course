@@ -4,7 +4,7 @@ import QuestionCard, { isCorrectAnswer, prepareQuestions } from '../components/Q
 import ProgressBar from '../components/ProgressBar'
 import { ArrowLeft, ArrowRight, Flag } from '../components/Icons'
 
-export default function FinalTestPage({ navigate, onFinish }) {
+export default function FinalTestPage({ navigate, onFinish, onSkip }) {
   const questions = useMemo(() => prepareQuestions(week1.finalTestQuestions), [])
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -47,6 +47,12 @@ export default function FinalTestPage({ navigate, onFinish }) {
           <span>CSCA Mathematics</span>
           <h1>Week 1 Test</h1>
           <p>Basic Arithmetic & Number Skills</p>
+          <button className="test-skip-button" onClick={() => {
+            onSkip()
+            navigate('/week-1')
+          }}>
+            Пропустить итоговый тест <ArrowRight size={16} />
+          </button>
         </div>
 
         <div className="test-progress">

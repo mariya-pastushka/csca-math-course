@@ -2,16 +2,20 @@ import { WorkedExample } from '../components/LearningCards'
 import { LessonNavigation, PageHeading } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
 
-export default function WorkedExamplesPage({ topic, navigate, progress, onComplete }) {
+export default function WorkedExamplesPage({ topic, navigate, progress, onComplete, onSkip }) {
   const nextPath = '/week-1/' + topic.id + '/practice'
   const complete = () => {
     onComplete(topic.id, 'examples')
     navigate(nextPath)
   }
+  const skip = () => {
+    onSkip(topic.id, 'examples')
+    navigate(nextPath)
+  }
 
   return (
     <div className="content-page lesson-content-page">
-      <SubtopicHeader topic={topic} stage="examples" navigate={navigate} progress={progress} />
+      <SubtopicHeader topic={topic} stage="examples" navigate={navigate} progress={progress} onSkip={skip} />
       <div className="lesson-container">
         <PageHeading
           eyebrow={'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Разобранные примеры'}

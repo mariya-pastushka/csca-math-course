@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from '../components/Icons'
 import { LessonNavigation, PageHeading } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
 
-export default function PracticePage({ topic, navigate, progress, onComplete }) {
+export default function PracticePage({ topic, navigate, progress, onComplete, onSkip }) {
   const questions = useMemo(() => prepareQuestions(topic.practiceQuestions), [topic.id])
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -27,10 +27,14 @@ export default function PracticePage({ topic, navigate, progress, onComplete }) 
     onComplete(topic.id, 'practice')
     navigate('/week-1/' + topic.id + '/homework')
   }
+  const skip = () => {
+    onSkip(topic.id, 'practice')
+    navigate('/week-1/' + topic.id + '/homework')
+  }
 
   return (
     <div className="content-page lesson-content-page">
-      <SubtopicHeader topic={topic} stage="practice" navigate={navigate} progress={progress} />
+      <SubtopicHeader topic={topic} stage="practice" navigate={navigate} progress={progress} onSkip={skip} />
       <div className="lesson-container narrow-container">
         <PageHeading
           eyebrow={'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Практика'}

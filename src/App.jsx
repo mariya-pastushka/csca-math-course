@@ -13,15 +13,17 @@ import FinalTestPage from './pages/FinalTestPage'
 import FinalResultPage from './pages/FinalResultPage'
 
 const STORAGE_KEY = 'csca-week1-progress-v1'
-const emptyProgress = { completed: {}, scores: {}, finalResult: null }
+const emptyProgress = { completed: {}, skipped: {}, scores: {}, finalResult: null, finalSkipped: false }
 
 const loadProgress = () => {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
     return {
       completed: saved?.completed || {},
+      skipped: saved?.skipped || {},
       scores: saved?.scores || {},
       finalResult: saved?.finalResult || null,
+      finalSkipped: Boolean(saved?.finalSkipped),
     }
   } catch {
     return emptyProgress
@@ -49,33 +51,50 @@ export default function App() {
   }
 
   const markComplete = (topicId, stage) => {
+    const key = topicId + ':' + stage
     setProgress((current) => ({
       ...current,
-      completed: { ...current.completed, [topicId + ':' + stage]: true },
+      completed: { ...current.completed, [key]: true },
+      skipped: { ...current.skipped, [key]: false },
+    }))
+  }
+
+  const skipStage = (topicId, stage) => {
+    const key = topicId + ':' + stage
+    setProgress((current) => ({
+      ...current,
+      completed: { ...current.completed, [key]: true },
+      skipped: { ...current.skipped, [key]: true },
     }))
   }
 
   const saveHomework = (topicId, result) => {
+    const key = topicId + ':homework'
     setProgress((current) => ({
       ...current,
-      completed: { ...current.completed, [topicId + ':homework']: true },
+      completed: { ...current.completed, [key]: true },
+      skipped: { ...current.skipped, [key]: false },
       scores: { ...current.scores, [topicId]: result },
     }))
   }
 
   const saveFinal = (result) => {
-    setProgress((current) => ({ ...current, finalResult: result }))
+    setProgress((current) => ({ ...current, finalResult: result, finalSkipped: false }))
+  }
+
+  const skipFinal = () => {
+    setProgress((current) => ({ ...current, finalSkipped: true }))
   }
 
   const progressPercent = useMemo(() => {
     const completedStages = Object.values(progress.completed).filter(Boolean).length
-    const finalPoint = progress.finalResult ? 1 : 0
+    const finalPoint = progress.finalResult || progress.finalSkipped ? 1 : 0
     return Math.round(((completedStages + finalPoint) / (allSubtopics.length * 4 + 1)) * 100)
   }, [progress])
 
   if (path === '/') return <WelcomePage navigate={navigate} />
   if (path === '/course') return <CoursePage navigate={navigate} />
-  if (path === '/week-1/final-test') return <FinalTestPage navigate={navigate} onFinish={saveFinal} />
+  if (path === '/week-1/final-test') return <FinalTestPage navigate={navigate} onFinish={saveFinal} onSkip={skipFinal} />
   if (path === '/week-1/final-result') return <FinalResultPage navigate={navigate} result={progress.finalResult} />
 
   let content
@@ -89,13 +108,13 @@ export default function App() {
     if (!topic) {
       content = <WeekOverviewPage navigate={navigate} progress={progress} progressPercent={progressPercent} />
     } else if (stage === 'theory') {
-      content = <TheoryPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} />
+      content = <TheoryPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} onSkip={skipStage} />
     } else if (stage === 'examples') {
-      content = <WorkedExamplesPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} />
+      content = <WorkedExamplesPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} onSkip={skipStage} />
     } else if (stage === 'practice') {
-      content = <PracticePage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} />
+      content = <PracticePage key={topic.id} topic={topic} navigate={navigate} progress={progress} onComplete={markComplete} onSkip={skipStage} />
     } else if (stage === 'homework') {
-      content = <HomeworkPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onFinish={saveHomework} />
+      content = <HomeworkPage key={topic.id} topic={topic} navigate={navigate} progress={progress} onFinish={saveHomework} onSkip={skipStage} />
     } else {
       content = <HomeworkResultPage key={topic.id} topic={topic} navigate={navigate} progress={progress} />
     }

@@ -1,28 +1,10 @@
 import MathFormula from './MathFormula'
+import MathAnswerInput from './MathAnswerInput'
 import { Check, Close } from './Icons'
 import { SolutionReveal } from './LearningCards'
+import { isCorrectAnswer } from '../utils/answers'
 
-export const normalizeAnswer = (value) =>
-  String(value ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/,/g, '')
-    .replace(/\$/g, '')
-    .replace(/%/g, '')
-    .replace(/\b(km|kg|cm|mm|m|g|l)\b/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-
-export function isCorrectAnswer(value, expected) {
-  const actual = normalizeAnswer(value)
-  const target = normalizeAnswer(expected)
-  const actualNumber = Number(actual)
-  const targetNumber = Number(target)
-  if (actual !== '' && target !== '' && Number.isFinite(actualNumber) && Number.isFinite(targetNumber)) {
-    return Math.abs(actualNumber - targetNumber) < 1e-9
-  }
-  return actual === target
-}
+export { isCorrectAnswer }
 
 export default function QuestionCard({
   question,
@@ -63,16 +45,12 @@ export default function QuestionCard({
           ))}
         </div>
       ) : (
-        <label className="number-answer">
-          <span>Ваш ответ</span>
-          <input
-            inputMode="decimal"
-            value={value || ''}
-            onChange={(event) => !checked && onChange(event.target.value)}
-            placeholder="Введите ответ"
-            disabled={checked}
-          />
-        </label>
+        <MathAnswerInput
+          id={'answer-' + question.id}
+          value={value || ''}
+          onChange={onChange}
+          disabled={checked}
+        />
       )}
 
       {!hideFeedback && checked && (

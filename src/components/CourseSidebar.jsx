@@ -28,8 +28,8 @@ export default function CourseSidebar({
 
   useEffect(() => {
     if (!activeTopic) return
-    setOpenLessons((current) => ({ ...current, [activeTopic.lessonId]: true }))
-    setOpenTopics((current) => ({ ...current, [activeTopic.id]: true }))
+    setOpenLessons({ [activeTopic.lessonId]: true })
+    setOpenTopics({ [activeTopic.id]: true })
   }, [activeTopic])
 
   const go = (path) => {
@@ -61,12 +61,11 @@ export default function CourseSidebar({
               className="sidebar-lesson"
               key={lesson.id}
               open={Boolean(openLessons[lesson.id])}
-              onToggle={(event) => {
-                const open = event.currentTarget.open
-                setOpenLessons((current) => ({ ...current, [lesson.id]: open }))
-              }}
             >
-              <summary>
+              <summary onClick={(event) => {
+                event.preventDefault()
+                go('/week-1/' + lesson.subtopics[0].id + '/theory')
+              }}>
                 <span className="lesson-number">{lesson.number}</span>
                 <span>
                   <small>Урок {lesson.number}</small>
@@ -77,18 +76,17 @@ export default function CourseSidebar({
               <div className="sidebar-topics">
                 {lesson.subtopics.map((subtopic) => {
                   const isCurrent = currentPath.includes('/' + subtopic.id + '/')
-                  const done = Boolean(progress.scores[subtopic.id])
+                  const done = stages.every(([stage]) => Boolean(progress.completed[subtopic.id + ':' + stage]))
                   return (
                     <details
                       className="sidebar-topic"
                       key={subtopic.id}
                       open={Boolean(openTopics[subtopic.id])}
-                      onToggle={(event) => {
-                        const open = event.currentTarget.open
-                        setOpenTopics((current) => ({ ...current, [subtopic.id]: open }))
-                      }}
                     >
-                      <summary className={isCurrent ? 'is-current' : ''}>
+                      <summary className={isCurrent ? 'is-current' : ''} onClick={(event) => {
+                        event.preventDefault()
+                        go('/week-1/' + subtopic.id + '/theory')
+                      }}>
                         <span className={'topic-status ' + (done ? 'is-done' : '')}>{done ? <Check size={13} /> : subtopic.number}</span>
                         <span>{subtopic.titleRu}</span>
                       </summary>
@@ -96,9 +94,15 @@ export default function CourseSidebar({
                         {stages.map(([stage, label]) => {
                           const href = '/week-1/' + subtopic.id + '/' + stage
                           const complete = Boolean(progress.completed[subtopic.id + ':' + stage])
+                          const skipped = Boolean(progress.skipped?.[subtopic.id + ':' + stage])
                           return (
                             <button key={stage} className={currentPath === href ? 'is-active' : ''} onClick={() => go(href)}>
-                              <span className={'stage-dot ' + (complete ? 'is-complete' : '')}>{complete ? <Check size={11} /> : ''}</span>
+                              <span
+                                className={'stage-dot ' + (complete ? 'is-complete ' : '') + (skipped ? 'is-skipped' : '')}
+                                title={skipped ? 'Пропущено — можно вернуться' : complete ? 'Выполнено' : ''}
+                              >
+                                {skipped ? '↷' : complete ? <Check size={11} /> : ''}
+                              </span>
                               {label}
                             </button>
                           )
@@ -111,13 +115,14 @@ export default function CourseSidebar({
             </details>
           ))}
 
-          <button className={'sidebar-final ' + (currentPath.includes('/final') ? 'is-active' : '')} onClick={() => go('/week-1/final-test')}>
+          <button className={'sidebar-final ' + (currentPath.includes('/final') ? 'is-active ' : '') + ((progress.finalResult || progress.finalSkipped) ? 'is-complete' : '')} onClick={() => go('/week-1/final-test')}>
             <Flag size={18} />
             <span>
               <small>Итог</small>
               Week 1 Test
             </span>
             {progress.finalResult && <span className="final-score">{progress.finalResult.score}/15</span>}
+            {!progress.finalResult && progress.finalSkipped && <span className="final-score">↷</span>}
           </button>
         </div>
       </aside>
