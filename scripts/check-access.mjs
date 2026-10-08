@@ -37,7 +37,7 @@ try {
     check((await request(path)).status === 404,'Серверные файлы не должны публиковаться')
   }
   const loginHtml = await (await request('/login')).text()
-  check(loginHtml.includes('Доступ к сайту') && !loginHtml.includes('/src/main.jsx'),'Вход должен быть отдельной серверной страницей')
+  check(loginHtml.includes('Введите пароль') && !loginHtml.includes('/src/main.jsx') && !loginHtml.includes('name="username"'),'Вход ученика должен быть отдельной серверной страницей без логина администратора')
   check((await request('/auth/site.css')).status === 200 && (await request('/auth/access.js')).status === 200,'Стили и скрипт входа должны работать без сессии')
   check((await request('/admin')).status === 303,'Админка должна требовать отдельный вход')
   check((await request('/admin/login')).status === 200,'Вход администратора должен открываться')

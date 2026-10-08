@@ -3,8 +3,28 @@ import { test } from 'node:test'
 import { adminCredentials, databaseUrl, readServerSetting } from '../server/config.js'
 import { accessFailure, classifyAccessError } from '../server/access-errors.js'
 import { handleAccessApi } from '../server/access-api.js'
+import { protectRequest } from '../server/protect.js'
 
 const fakeUrl = 'postgresql://test_user:test_only_password@sample.neon.tech/test_db?sslmode=require'
+
+test('Students enter only a six-digit password; admin login remains separate',async () => {
+  const homepage = await protectRequest(new Request('https://site.example/'))
+  assert.equal(homepage.status,303)
+  assert.equal(homepage.headers.get('location'),'https://site.example/login')
+  const student = await protectRequest(new Request('https://site.example/login'))
+  const studentHtml = await student.text()
+  assert.ok(studentHtml.includes('<h1>Введите пароль</h1>'))
+  assert.ok(studentHtml.includes('пароль из 6 цифр'))
+  assert.ok(studentHtml.includes('maxlength="6"'))
+  assert.ok(studentHtml.includes('pattern="[0-9]{6}"'))
+  assert.ok(!studentHtml.includes('name="username"'))
+  assert.ok(!studentHtml.includes('Вход администратора'))
+  const administrator = await protectRequest(new Request('https://site.example/admin/login'))
+  const adminHtml = await administrator.text()
+  assert.ok(adminHtml.includes('<h1>Вход администратора</h1>'))
+  assert.ok(adminHtml.includes('name="username"'))
+})
+
 async function withEnv(values,work) {
   const previous = Object.fromEntries(Object.keys(values).map((key) => [key,process.env[key]]))
   for (const [key,value] of Object.entries(values)) {

@@ -10,7 +10,7 @@ export const securityHeaders = {
 export function accessPage(mode) {
   const adminLogin = mode === 'admin-login'
   const admin = mode === 'admin'
-  const title = admin ? 'Управление доступом' : adminLogin ? 'Вход администратора' : 'Доступ к сайту'
+  const title = admin ? 'Управление доступом' : adminLogin ? 'Вход администратора' : 'Введите пароль'
   const content = admin ? `
     <p class="access-description">Измените пароль для входа на учебную платформу.</p>
     <div class="access-current"><span>Текущий пароль</span><strong>••••••</strong><small id="password-status">Загрузка…</small></div>
@@ -18,7 +18,7 @@ export function accessPage(mode) {
     <div id="new-password-panel" class="access-new-password" hidden><span>Новый пароль</span><output id="new-password"></output><button id="copy-password" class="secondary-button" type="button">Скопировать</button><small>Сохраните пароль: после закрытия страницы он больше не показывается.</small></div>
     <p class="access-note">После смены пароля пользователи войдут заново.</p>
     <div class="access-admin-actions"><a class="text-button" href="/">Открыть сайт</a><button id="admin-logout" class="text-button" type="button">Выйти из админки</button></div>` : `
-    <p class="access-description">${adminLogin ? 'Введите логин и пароль администратора' : 'Введите пароль'}</p>
+    <p class="access-description">${adminLogin ? 'Введите логин и пароль администратора' : 'Для входа на курс нужен пароль из 6 цифр.'}</p>
     <form id="access-form" novalidate>
       ${adminLogin ? '<label class="access-field"><span>Логин</span><input id="username" name="username" type="text" autocomplete="username" maxlength="128" required /></label>' : ''}
       <label class="access-field"><span>${adminLogin ? 'Пароль' : '6 цифр'}</span><input id="password" name="password" type="password" ${adminLogin ? 'autocomplete="current-password" maxlength="128"' : 'class="access-pin" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="off"'} required autofocus /></label>
