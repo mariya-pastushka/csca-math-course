@@ -4022,6 +4022,188 @@ a {
   }
 }
 
+/* Access pages share the course palette, fonts and controls. */
+.access-page {
+  display: grid;
+  place-items: center;
+  padding: 110px 20px 60px;
+}
+
+.access-brand {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  left: 25px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #f3f0e8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.access-card {
+  position: relative;
+  z-index: 1;
+  width: min(440px,100%);
+  padding: 32px;
+  border: 1px solid rgba(216,243,117,0.18);
+  border-radius: 20px;
+  background: rgba(25,29,24,0.94);
+  box-shadow: 0 20px 70px rgba(0,0,0,0.16);
+  text-align: center;
+}
+
+.access-lock {
+  margin-bottom: 16px;
+  font-size: 28px;
+}
+
+.access-card h1 {
+  margin: 0;
+  font-family: 'Manrope',Arial,sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.access-description,
+.access-note {
+  color: rgba(243,240,232,0.55);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.access-description {
+  margin: 11px 0 26px;
+}
+
+.access-field {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-direction: column;
+  text-align: left;
+}
+
+.access-field > span {
+  color: rgba(243,240,232,0.6);
+  font-size: 11px;
+}
+
+.access-field input {
+  width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  border: 1px solid rgba(243,240,232,0.18);
+  border-radius: 10px;
+  outline: none;
+  background: rgba(255,255,255,0.025);
+  color: #f3f0e8;
+  font-size: 16px;
+}
+
+.access-field input:focus {
+  border-color: rgba(216,243,117,0.65);
+  box-shadow: 0 0 0 3px rgba(216,243,117,0.06);
+}
+
+.access-field .access-pin {
+  padding-left: 23px;
+  font-size: 26px;
+  letter-spacing: 10px;
+  text-align: center;
+}
+
+.access-submit {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 8px;
+  background: var(--accent);
+  color: var(--dark);
+}
+
+.access-submit:hover {
+  background: var(--accent-strong);
+}
+
+.access-error {
+  margin: 18px 0 0;
+  color: #ef9b8b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.access-message {
+  margin: 16px 0 0;
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.access-current,
+.access-new-password {
+  padding: 18px;
+  border: 1px solid rgba(216,243,117,0.15);
+  border-radius: 12px;
+  background: rgba(216,243,117,0.025);
+}
+
+.access-current > span,
+.access-new-password > span {
+  display: block;
+  color: rgba(243,240,232,0.6);
+  font-size: 11px;
+}
+
+.access-current strong,
+.access-new-password output {
+  display: block;
+  margin: 10px 0;
+  color: var(--accent);
+  font-family: 'Manrope',Arial,sans-serif;
+  font-size: 35px;
+  font-weight: 600;
+  letter-spacing: 7px;
+}
+
+.access-current small,
+.access-new-password small {
+  display: block;
+  color: rgba(243,240,232,0.5);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.access-new-password {
+  margin-top: 20px;
+}
+
+.access-new-password .secondary-button {
+  margin: 2px 0 14px;
+  border-color: rgba(216,243,117,0.35);
+  color: var(--accent);
+}
+
+.access-admin-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.access-admin-actions .text-button {
+  color: rgba(243,240,232,0.65);
+  font-size: 11px;
+}
+
+@media (max-width: 680px) {
+  .access-card {
+    padding: 27px 21px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

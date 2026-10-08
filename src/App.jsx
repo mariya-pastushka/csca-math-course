@@ -15,6 +15,7 @@ import WhiteboardPage from './pages/WhiteboardPage'
 import { week2, findWeek2Subtopic, getTopicProgressKeys } from './data/week2'
 import { Week2OverviewPage, Week2TopicPage, Week2LecturePage, Week2ExamplesPage, Week2VocabularyPage, getTopicStagePaths } from './pages/Week2Pages'
 import MiniTestPage from './pages/MiniTestPage'
+import { requireSiteSession } from './security/course-session'
 
 const STORAGE_KEY = 'csca-week1-progress-v1'
 const emptyProgress = { completed: {}, skipped: {}, scores: {}, finalResult: null, finalSkipped: false }
@@ -49,7 +50,7 @@ export default function App() {
   const [week2Progress, setWeek2Progress] = useState(loadWeek2Progress)
 
   useEffect(() => {
-    const onPopState = () => setPath(window.location.pathname)
+    const onPopState = async () => { if (await requireSiteSession()) setPath(window.location.pathname) }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
@@ -62,7 +63,8 @@ export default function App() {
     localStorage.setItem('csca-week2-progress-v1', JSON.stringify(week2Progress))
   }, [week2Progress])
 
-  const navigate = (nextPath) => {
+  const navigate = async (nextPath) => {
+    if (!await requireSiteSession()) return
     if (window.location.pathname !== nextPath) window.history.pushState({}, '', nextPath)
     setPath(nextPath)
     window.scrollTo({ top: 0, behavior: 'smooth' })
