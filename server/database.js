@@ -1,18 +1,33 @@
 import { neon } from '@neondatabase/serverless'
+import { databaseUrl } from './config.js'
 
 let connection
+let connectionUrl
 let schemaReady
 
 export function database() {
-  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required')
-  if (!connection) connection = neon(process.env.DATABASE_URL)
+  const url = databaseUrl()
+  if (!connection || connectionUrl !== url) {
+    connection = neon(url)
+    connectionUrl = url
+    schemaReady = undefined
+  }
   return connection
 }
 
 export async function ensureSchema() {
+  const sql = database()
   if (!schemaReady) {
     schemaReady = (async () => {
-      const sql = database()
+      // On Vercel, each cold start should not repeat DDL on an initialized database.
+      const [existing] = await sql`SELECT to_regclass('site_settings') IS NOT NULL AS settings,
+        to_regclass('site_auth_sessions') IS NOT NULL AS sessions,
+        to_regclass('site_login_limits') IS NOT NULL AS limits`
+      if (existing.settings && existing.sessions && existing.limits) {
+        const rows = await sql`SELECT id FROM site_settings WHERE id=1`
+        if (!rows.length) await sql.query('INSERT INTO site_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING')
+        return
+      }
       await sql.query(`CREATE TABLE IF NOT EXISTS site_settings (
         id integer PRIMARY KEY CHECK (id = 1),
         password_hash text,

@@ -1,5 +1,6 @@
 import { validSession } from './auth.js'
 import { accessRedirect, htmlResponse, jsonResponse } from './pages.js'
+import { accessFailure } from './access-errors.js'
 
 const publicAssets = new Set(['/auth/site.css','/auth/access.js'])
 export const isAccessApi = (path) => path === '/api/access' || path === '/api/access/'
@@ -19,7 +20,7 @@ export async function protectRequest(request) {
     if (await validSession(request,'user') || await validSession(request,'admin')) return null
     const isResource = /\.[a-z\d]+$/i.test(path) || path.startsWith('/src/') || path.startsWith('/@') || path.startsWith('/node_modules/')
     return isResource ? jsonResponse({error:'Требуется вход'},401) : accessRedirect(request,'/login')
-  } catch {
-    return jsonResponse({error:'Сервис доступа временно недоступен'},503)
+  } catch (error) {
+    return accessFailure(error,{stage:'session-check'})
   }
 }

@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomInt, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto'
 import { promisify } from 'node:util'
 import { database, ensureSchema } from './database.js'
+import { adminCredentials } from './config.js'
 
 const scrypt = promisify(scryptCallback)
 const userLifetime = 7 * 24 * 60 * 60
@@ -8,7 +9,10 @@ const adminLifetime = 8 * 60 * 60
 const production = () => process.env.VERCEL === '1' || process.env.NODE_ENV === 'production'
 export const cookieName = (role) => (production() ? '__Host-' : '') + (role === 'admin' ? 'csca_admin' : 'csca_access')
 const digest = (value) => createHash('sha256').update(value).digest('hex')
-const adminFingerprint = () => digest((process.env.ADMIN_USERNAME || '') + '\0' + (process.env.ADMIN_PASSWORD || ''))
+const adminFingerprint = () => {
+  const credentials = adminCredentials(false)
+  return digest(credentials.username + '\0' + credentials.password)
+}
 
 export function safeEqual(left, right) {
   return timingSafeEqual(createHash('sha256').update(String(left)).digest(),createHash('sha256').update(String(right)).digest())

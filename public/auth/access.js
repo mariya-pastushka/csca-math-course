@@ -10,7 +10,8 @@ async function api(action,payload) {
   })
   if (payload?.password) payload.password = ''
   const data = await response.json()
-  if (!response.ok) throw new Error(data.error || 'Не удалось выполнить запрос')
+  if (!response.ok) throw new Error((data.error || 'Не удалось выполнить запрос')
+    + (data.requestId ? ' Код обращения: ' + data.requestId.slice(0,8) : ''))
   return data
 }
 
