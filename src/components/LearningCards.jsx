@@ -1,5 +1,6 @@
 import MathFormula from './MathFormula'
 import { ChevronDown } from './Icons'
+import MathVisual from './MathVisual'
 
 export function VocabularyCard({ item }) {
   return (
@@ -84,7 +85,9 @@ export function WorkedExample({ item, index }) {
       </header>
       <div className="worked-problem">
         <span>Задание</span>
+        {item.prompt && <p>{item.prompt}</p>}
         <MathFormula>{item.problem}</MathFormula>
+        {item.visual && <MathVisual visual={item.visual} />}
       </div>
       <SolutionSteps steps={item.steps} answer={item.answer} />
     </article>

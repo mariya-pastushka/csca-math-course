@@ -35,7 +35,19 @@ export const parseMathNumber = (value) => {
   return normalized !== '' && Number.isFinite(numeric) ? numeric : null
 }
 
-export function isCorrectAnswer(value, expected) {
+export function isCorrectAnswer(value, expected, kind) {
+  if (kind === 'set') {
+    const actual = parseFiniteSet(value)
+    const target = parseFiniteSet(expected)
+    return actual !== null && target !== null && actual.length === target.length && actual.every((item, index) => item === target[index])
+  }
+  if (kind === 'interval') return sameIntervals(parseIntervals(value), parseIntervals(expected))
+  if (kind === 'multi') {
+    if (!Array.isArray(value) || !Array.isArray(expected)) return false
+    const actual = [...new Set(value)].sort()
+    const target = [...new Set(expected)].sort()
+    return actual.length === target.length && actual.every((item, index) => item === target[index])
+  }
   const actual = normalizeAnswer(value)
   const target = normalizeAnswer(expected)
   const actualNumber = parseMathNumber(actual)
@@ -45,3 +57,5 @@ export function isCorrectAnswer(value, expected) {
   }
   return actual === target
 }
+import { parseFiniteSet, parseIntervals, sameIntervals } from './setsAndIntervals.js'
+

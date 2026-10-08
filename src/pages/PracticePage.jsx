@@ -5,7 +5,9 @@ import { ArrowLeft, ArrowRight } from '../components/Icons'
 import { LessonNavigation, PageHeading } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
 
-export default function PracticePage({ topic, navigate, progress, onComplete, onSkip }) {
+export default function PracticePage({ topic, navigate, progress, onComplete, onSkip, weekId = 'week-1', stageConfig, stagePaths, nextDestination, nextLabel = 'Продолжить к домашней работе' }) {
+  const basePath = '/' + weekId + '/' + topic.id
+  const nextPath = nextDestination || basePath + '/homework'
   const questions = useMemo(() => prepareQuestions(topic.practiceQuestions), [topic.id])
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -14,7 +16,7 @@ export default function PracticePage({ topic, navigate, progress, onComplete, on
   const current = questions[index]
   const value = answers[current.id]
   const isChecked = Boolean(checked[current.id])
-  const isCorrect = isCorrectAnswer(value, current.answer)
+  const isCorrect = isCorrectAnswer(value, current.answer, current.answerKind)
 
   const goNext = () => {
     if (index < questions.length - 1) {
@@ -25,25 +27,25 @@ export default function PracticePage({ topic, navigate, progress, onComplete, on
 
   const finish = () => {
     onComplete(topic.id, 'practice')
-    navigate('/week-1/' + topic.id + '/homework')
+    navigate(nextPath)
   }
   const skip = () => {
     onSkip(topic.id, 'practice')
-    navigate('/week-1/' + topic.id + '/homework')
+    navigate(nextPath)
   }
 
   return (
     <div className="content-page lesson-content-page">
-      <SubtopicHeader topic={topic} stage="practice" navigate={navigate} progress={progress} onSkip={skip} />
+      <SubtopicHeader topic={topic} stage="practice" navigate={navigate} progress={progress} onSkip={onSkip ? skip : undefined} weekId={weekId} stageConfig={stageConfig} stagePaths={stagePaths} />
       <div className="lesson-container narrow-container">
         <PageHeading
-          eyebrow={'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Практика'}
+          eyebrow={weekId === 'week-1' ? 'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Практика' : 'Week 2 · Topic ' + topic.number + ' · Практика'}
           title="Теперь попробуйте сами"
           subtitle="Решите задачу, проверьте ответ и только потом, если нужно, откройте подробное решение."
           meta={topic.titleRu}
         />
 
-        <button className="stage-back-link" onClick={() => navigate('/week-1/' + topic.id + '/examples')}>
+        <button className="stage-back-link" onClick={() => navigate(basePath + '/examples')}>
           <ArrowLeft size={16} /> Назад к разобранным примерам
         </button>
 
@@ -76,9 +78,9 @@ export default function PracticePage({ topic, navigate, progress, onComplete, on
 
         {isChecked && index === questions.length - 1 && (
           <LessonNavigation
-            previous={{ path: '/week-1/' + topic.id + '/examples', label: 'Разобранные примеры' }}
-            next={{ path: '/week-1/' + topic.id + '/homework', label: 'Домашняя работа' }}
-            nextLabel="Продолжить к домашней работе"
+            previous={{ path: basePath + '/examples', label: 'Разобранные примеры' }}
+            next={{ path: nextPath, label: nextLabel }}
+            nextLabel={nextLabel}
             navigate={navigate}
             onNext={finish}
           />

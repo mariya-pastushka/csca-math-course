@@ -8,28 +8,28 @@ const stages = [
   ['result', 'Результат'],
 ]
 
-export default function SubtopicHeader({ topic, stage, navigate, progress, onSkip }) {
+export default function SubtopicHeader({ topic, stage, navigate, progress, onSkip, weekId = 'week-1', stageConfig = stages, stagePaths = {}, stageProgressKeys = {} }) {
   return (
     <header className="subtopic-header">
       <div className="breadcrumbs">
-        <button onClick={() => navigate('/week-1')}>Week 1</button>
+        <button onClick={() => navigate('/' + weekId)}>{weekId === 'week-1' ? 'Week 1' : 'Week 2'}</button>
         <span>/</span>
-        <span>Урок {topic.lesson.number}</span>
+        <span>{weekId === 'week-1' ? 'Урок' : 'Тема'} {topic.lesson.number}</span>
         <span>/</span>
         <strong>{topic.titleRu}</strong>
       </div>
       <div className="subtopic-header-actions">
         <div className="subtopic-stage-nav">
-          {stages.map(([stageId, label], index) => {
+          {stageConfig.map(([stageId, label], index) => {
             const complete = stageId === 'result'
               ? Boolean(progress.scores[topic.id])
-              : Boolean(progress.completed[topic.id + ':' + stageId])
+              : Boolean(progress.completed[stageProgressKeys[stageId] || topic.id + ':' + stageId])
             const skipped = stageId !== 'result' && Boolean(progress.skipped?.[topic.id + ':' + stageId])
             return (
               <button
                 key={stageId}
                 className={stage === stageId ? 'is-active' : ''}
-                onClick={() => navigate('/week-1/' + topic.id + '/' + stageId)}
+                onClick={() => navigate(stagePaths[stageId] || '/' + weekId + '/' + topic.id + '/' + stageId)}
                 disabled={stageId === 'result' && !progress.scores[topic.id]}
               >
                 <span className={skipped ? 'is-skipped' : ''} title={skipped ? 'Пропущено — можно вернуться' : complete ? 'Выполнено' : ''}>

@@ -1,0 +1,18 @@
+export const vocabulary = [
+  { term: 'Linear equation', chinese: '一次方程', translation: 'Линейное уравнение', explanation: 'Уравнение, в котором переменные входят в первой степени. Для одной переменной: 一元一次方程.' },
+  { term: 'Variable', chinese: '变量', translation: 'Переменная', explanation: 'Буква, которая обозначает число. Неизвестное число в уравнении также называют 未知数.' },
+  { term: 'Coefficient', chinese: '系数', translation: 'Коэффициент', explanation: 'Число, на которое умножена переменная: в −3x коэффициент равен −3.' },
+  { term: 'Constant', chinese: '常数', translation: 'Постоянная', explanation: 'Число без переменной. Свободный член уравнения называют 常数项.' },
+  { term: 'Solution', chinese: '解', translation: 'Решение', explanation: 'Значение переменной или пара значений, при которых все нужные равенства верны.' },
+  { term: 'Equation', chinese: '方程', translation: 'Уравнение', explanation: 'Равенство с неизвестным: нужно найти значения, при которых оно выполняется.' },
+  { term: 'System of equations', chinese: '方程组', translation: 'Система уравнений', explanation: 'Несколько уравнений, которые должны выполняться одновременно. Система двух линейных уравнений: 二元一次方程组.' },
+  { term: 'Substitution', chinese: '代入法', translation: 'Подстановка', explanation: 'Заменяем переменную равным ей выражением. Полное название метода исключения: 代入消元法.' },
+  { term: 'Elimination', chinese: '加减消元法', translation: 'Метод сложения / исключения', explanation: 'Складываем или вычитаем уравнения так, чтобы одна переменная исчезла.' },
+  { term: 'Solve', chinese: '求解', translation: 'Решить', explanation: 'Найти все решения и убедиться, что других случаев не пропустили.' },
+  { term: 'Find x', chinese: '求 x 的值', translation: 'Найти x', explanation: 'В ответе требуется значение x. Не перепутайте его со значением y или выражения.' },
+  { term: 'Find the value', chinese: '求值', translation: 'Найти значение', explanation: 'Вычислить число, которое обозначает указанное выражение.' },
+  { term: 'Simplify', chinese: '化简', translation: 'Упростить', explanation: 'Раскрыть скобки, привести подобные слагаемые или сократить дробь, сохраняя значение.' },
+  { term: 'Check your answer', chinese: '检验答案', translation: 'Проверить ответ', explanation: 'Подставить найденные числа в исходное уравнение или в оба уравнения системы.' },
+  { term: 'No solution', chinese: '无解', translation: 'Нет решений', explanation: 'Получилось противоречие, например 0=5. Ни одно значение неизвестного не подходит.' },
+  { term: 'Infinitely many solutions', chinese: '无穷多解', translation: 'Бесконечно много решений', explanation: 'Для уравнения получаем тождество; у системы оба уравнения описывают одну и ту же связь.' },
+]

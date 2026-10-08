@@ -51,3 +51,10 @@ export const Flag = ({ size = 20 }) => (
     <path d="M5 21V4m0 1h11l-2 3 2 3H5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
+
+export const Board = ({ size = 20 }) => (
+  <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <rect x="3.5" y="4" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
+    <path d="m8 13 3-3 2 2 3-4M9 20h6M12 17v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)

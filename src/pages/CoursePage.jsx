@@ -13,7 +13,8 @@ export default function CoursePage({ navigate }) {
       <section className="course-entry">
         <span className="course-index">ПРОГРАММА ПОДГОТОВКИ</span>
         <h2>Начните с прочного фундамента.</h2>
-        <p>Первая неделя собирает базовые вычислительные навыки, которые понадобятся во всех следующих разделах CSCA Mathematics.</p>
+        <p>Выберите неделю: укрепите вычислительную базу или переходите к уравнениям, множествам и неравенствам.</p>
+        <div className="course-weeks">
         <button className="week-entry-button" onClick={() => navigate('/week-1')}>
           <span className="week-entry-number">01</span>
           <span className="week-entry-copy">
@@ -23,6 +24,14 @@ export default function CoursePage({ navigate }) {
           </span>
           <span className="week-entry-arrow"><ArrowRight size={24} /></span>
         </button>
+        <button className="week-entry-button" onClick={() => navigate('/week-2')}>
+          <span className="week-entry-number">02</span>
+          <span className="week-entry-copy">
+            <small>Topic 1 и Topic 2 доступны</small><strong>Week 2</strong><em>Equations, Sets and Inequalities</em>
+          </span>
+          <span className="week-entry-arrow"><ArrowRight size={24} /></span>
+        </button>
+        </div>
       </section>
 
       <Footer />

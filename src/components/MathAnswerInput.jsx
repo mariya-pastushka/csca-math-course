@@ -10,8 +10,11 @@ const keys = [
   { label: ')', value: ')', title: 'Закрыть скобку' },
 ]
 
-export default function MathAnswerInput({ id, value = '', onChange, disabled }) {
+export default function MathAnswerInput({ id, value = '', onChange, disabled, kind }) {
   const inputRef = useRef(null)
+  const specialKeys = kind === 'set' ? ['−','{','}',';','∅'] : kind === 'interval' ? ['−','(',')','[',']',';','∞','∪','∅'] : null
+  const inputKeys = specialKeys ? specialKeys.map((symbol) => ({ label: symbol, value: symbol === '−' ? '-' : symbol, title: 'Добавить ' + symbol })) : keys
+  const placeholder = kind === 'set' ? 'Например: {1; 3; 5} или ∅' : kind === 'interval' ? 'Например: [-2; 4) или (3; +∞)' : 'Например: −7, 3/5 или 2 1/4'
 
   const restoreFocus = (position) => {
     requestAnimationFrame(() => {
@@ -56,12 +59,12 @@ export default function MathAnswerInput({ id, value = '', onChange, disabled }) 
           spellCheck={false}
           value={value}
           onChange={(event) => !disabled && onChange(event.target.value)}
-          placeholder="Например: −7, 3/5 или 2 1/4"
+          placeholder={placeholder}
           disabled={disabled}
         />
         {!disabled && (
           <div className="math-input-toolbar" aria-label="Панель математического ввода">
-            {keys.map((key) => (
+            {inputKeys.map((key) => (
               <button
                 key={key.title}
                 type="button"
@@ -88,7 +91,7 @@ export default function MathAnswerInput({ id, value = '', onChange, disabled }) 
       </div>
       {!disabled && (
         <p className="math-input-help">
-          Дробь: <strong>3/5</strong> · смешанная: <strong>2 1/4</strong> · отрицательная: <strong>−7</strong>
+          {kind === 'set' ? <>Множество: <strong>{'{1; 3; 5}'}</strong> · порядок не важен · пустое: <strong>∅</strong></> : kind === 'interval' ? <>Границы разделяйте <strong>;</strong> · объединение: <strong>∪</strong> · бесконечность: <strong>∞</strong></> : <>Дробь: <strong>3/5</strong> · смешанная: <strong>2 1/4</strong> · отрицательная: <strong>−7</strong></>}
         </p>
       )}
     </div>
