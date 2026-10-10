@@ -12,7 +12,7 @@ const keys = [
 
 export default function MathAnswerInput({ id, value = '', onChange, disabled, kind }) {
   const inputRef = useRef(null)
-  const specialKeys = kind === 'set' ? ['−','{','}',';','∅'] : kind === 'interval' ? ['−','(',')','[',']',';','∞','∪','∅'] : null
+  const specialKeys = kind === 'set' ? ['−','{','}',';','∅'] : kind === 'interval' ? ['−','/', '(',')','[',']',';','∞','∪','∅'] : null
   const inputKeys = specialKeys ? specialKeys.map((symbol) => ({ label: symbol, value: symbol === '−' ? '-' : symbol, title: 'Добавить ' + symbol })) : keys
   const placeholder = kind === 'set' ? 'Например: {1; 3; 5} или ∅' : kind === 'interval' ? 'Например: [-2; 4) или (3; +∞)' : 'Например: −7, 3/5 или 2 1/4'
 

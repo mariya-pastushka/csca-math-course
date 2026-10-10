@@ -54,6 +54,8 @@ export const subtractIntervals = (left, right) => right.reduce((remaining, remov
 const endpoint = (text) => {
   if (text === '-∞') return -Infinity
   if (text === '∞' || text === '+∞') return Infinity
+  const fraction = text.match(/^([+-]?\d+)\/([+-]?\d+)$/)
+  if (fraction) return Number(fraction[2]) !== 0 ? Number(fraction[1]) / Number(fraction[2]) : NaN
   return /^[+-]?\d+(?:[.,]\d+)?$/.test(text) ? Number(text.replace(',', '.')) : NaN
 }
 

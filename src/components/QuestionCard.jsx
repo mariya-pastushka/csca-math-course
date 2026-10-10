@@ -82,7 +82,7 @@ export default function QuestionCard({
                 disabled={checked}
               />
               <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-              <span>{option}</span>
+              {question.optionVisuals?.[option] ? <div style={{minWidth:0}}><span>{option}</span><MathVisual visual={question.optionVisuals[option]} /></div> : <span>{option}</span>}
             </label>
           ))}
         </div>

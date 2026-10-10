@@ -90,6 +90,7 @@ export function WorkedExample({ item, index }) {
         {item.visual && <MathVisual visual={item.visual} />}
       </div>
       <SolutionSteps steps={item.steps} answer={item.answer} />
+      {item.solutionVisual && <MathVisual visual={item.solutionVisual} />}
     </article>
   )
 }

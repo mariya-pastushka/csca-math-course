@@ -1,0 +1,58 @@
+Week 2 — Topic 3: Линейные и составные неравенства
+
+Добавлено:
+- Три лекции: линейные неравенства, системы/двойные неравенства, модуль.
+- 30 пошаговых лекционных примеров.
+- 15 новых заданий Examples: все условия перед всеми решениями.
+- 21 интерактивное задание Practice с автоматической проверкой и скрытым решением.
+- 10 новых вопросов Mini Test, результаты по пяти диапазонам, повтор и разбор ошибок.
+- 17 терминов с русским объяснением и переключением English / 中文.
+- Числовые прямые, включая четыре графических варианта ответа.
+- В начале Topic 2 — только две дополнительные карточки о строгом и нестрогом подмножестве.
+
+Новые файлы:
+src/data/week2/topic3/index.js
+src/data/week2/topic3/helpers.js
+src/data/week2/topic3/lectures.js
+src/data/week2/topic3/linearLecture.js
+src/data/week2/topic3/systemsLecture.js
+src/data/week2/topic3/absoluteLecture.js
+src/data/week2/topic3/examples.js
+src/data/week2/topic3/practice.js
+src/data/week2/topic3/miniTest.js
+src/data/week2/topic3/vocabulary.js
+src/utils/miniTestFeedback.js
+scripts/check-topic3-math.mjs
+artifacts/topic3-completion.txt
+
+Изменённые файлы:
+src/data/week2/index.js — подключена доступная Topic 3.
+src/data/week2/topic2/lectures.js — добавлены только две вводные карточки; прежний материал сохранён.
+src/App.jsx — передача настроек оценивания существующему Mini Test.
+src/pages/Week2Pages.jsx — доступность трёх тем, реальные количества примеров, заголовок Exam Focus.
+src/pages/MiniTestPage.jsx — динамическое количество вопросов и диапазоны результата.
+src/components/LearningCards.jsx — числовая прямая после решения примера.
+src/components/QuestionCard.jsx — использование MathVisual в графических вариантах ответа.
+src/components/MathAnswerInput.jsx — дробная черта для ввода границы интервала.
+src/utils/setsAndIntervals.js — дробные границы интервалов в существующем механизме проверки.
+src/styles.css — только предотвращение переполнения карточек/формул и перенос длинного ответа.
+
+Проверки:
+- 76 решений проверены по исходным условиям, граничным точкам и значениям внутри/снаружи.
+- 304 математические записи Topic 3 разобраны KaTeX без ошибок.
+- Проверки математики Topic 1 и Topic 2 проходят.
+- Сравнением данных подтверждено: весь прежний Topic 2 сохранён, кроме добавления двух карточек.
+- В браузере проверены все лекции, порядок Examples/Solutions, 21 правильный ответ Practice,
+  неверный ответ, скрытие/раскрытие решения, результаты Mini Test 9/10 и 10/10, разбор и повтор.
+- Проверены мобильные размеры 390x844, числовые прямые и отсутствие переполнения страницы.
+- Production-сборка и проверка защиты входа проходят.
+
+Команды проверки:
+node scripts/check-topic3-math.mjs
+node scripts/check-topic2-math.mjs
+node scripts/check-week2-math.mjs
+npm run check:access-config
+npm run build
+
+Homework не добавлен. Week 1, содержимое Topic 1, серверная защита и текущий пароль учеников не изменены.
+Новые зависимости не устанавливались. Push и deploy не выполнялись.

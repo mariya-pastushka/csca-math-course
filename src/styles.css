@@ -1431,6 +1431,7 @@ a {
 }
 
 .theory-card {
+  min-width: 0;
   min-height: 245px;
   padding: 23px;
 }
@@ -1473,6 +1474,9 @@ a {
 
 .math-inline {
   display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
   align-items: center;
 }
 
@@ -1696,6 +1700,10 @@ a {
   font-size: 9px;
 }
 
+.solution-step > div {
+  min-width: 0;
+}
+
 .solution-step strong {
   display: block;
   margin-bottom: 4px;
@@ -1716,6 +1724,7 @@ a {
 
 .solution-answer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
