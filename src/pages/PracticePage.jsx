@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from '../components/Icons'
 import { LessonNavigation, PageHeading } from '../components/PageElements'
 import SubtopicHeader from '../components/SubtopicHeader'
 
-export default function PracticePage({ topic, navigate, progress, onComplete, onSkip, weekId = 'week-1', stageConfig, stagePaths, nextDestination, nextLabel = 'Продолжить к домашней работе' }) {
+export default function PracticePage({ topic, navigate, progress, onComplete, onSkip, weekId = 'week-1', stageConfig, stagePaths, nextDestination, nextLabel = 'Продолжить к домашней работе', allowRetry = false }) {
   const basePath = '/' + weekId + '/' + topic.id
   const nextPath = nextDestination || basePath + '/homework'
   const questions = useMemo(() => prepareQuestions(topic.practiceQuestions), [topic.id])
@@ -39,7 +39,7 @@ export default function PracticePage({ topic, navigate, progress, onComplete, on
       <SubtopicHeader topic={topic} stage="practice" navigate={navigate} progress={progress} onSkip={onSkip ? skip : undefined} weekId={weekId} stageConfig={stageConfig} stagePaths={stagePaths} />
       <div className="lesson-container narrow-container">
         <PageHeading
-          eyebrow={weekId === 'week-1' ? 'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Практика' : 'Week 2 · Topic ' + topic.number + ' · Практика'}
+          eyebrow={weekId === 'week-1' ? 'Урок ' + topic.lesson.number + ' · Подтема ' + topic.number + ' · Практика' : weekId.replace('week-', 'Week ') + ' · ' + (weekId === 'week-2' ? 'Topic ' : 'Подтема ') + topic.number + ' · Практика'}
           title="Теперь попробуйте сами"
           subtitle="Решите задачу, проверьте ответ и только потом, если нужно, откройте подробное решение."
           meta={topic.titleRu}
@@ -67,6 +67,14 @@ export default function PracticePage({ topic, navigate, progress, onComplete, on
           solutionOpen={Boolean(solutions[current.id])}
           onToggleSolution={() => setSolutions({ ...solutions, [current.id]: !solutions[current.id] })}
         />
+
+        {allowRetry && isChecked && <div className="question-next"><button className="secondary-button" onClick={() => {
+          setAnswers((previous) => ({ ...previous, [current.id]: '' }))
+          setChecked((previous) => ({ ...previous, [current.id]: false }))
+          setSolutions((previous) => ({ ...previous, [current.id]: false }))
+        }}>Решить это задание ещё раз</button>{index === questions.length - 1 && <button className="secondary-button" onClick={() => {
+          setIndex(0); setAnswers({}); setChecked({}); setSolutions({})
+        }}>Повторить всю практику</button>}</div>}
 
         {isChecked && index < questions.length - 1 && (
           <div className="question-next">

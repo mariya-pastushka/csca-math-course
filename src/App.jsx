@@ -16,6 +16,8 @@ import { week2, findWeek2Subtopic, getTopicProgressKeys } from './data/week2'
 import { Week2OverviewPage, Week2TopicPage, Week2LecturePage, Week2ExamplesPage, Week2VocabularyPage, getTopicStagePaths } from './pages/Week2Pages'
 import MiniTestPage from './pages/MiniTestPage'
 import { requireSiteSession } from './security/course-session'
+import { week3, allWeek3Subtopics, findWeek3Subtopic, week3ProgressKeys, getWeek3StagePaths } from './data/week3'
+import SubtopicHeader from './components/SubtopicHeader'
 
 const STORAGE_KEY = 'csca-week1-progress-v1'
 const emptyProgress = { completed: {}, skipped: {}, scores: {}, finalResult: null, finalSkipped: false }
@@ -44,10 +46,20 @@ const loadWeek2Progress = () => {
   }
 }
 
+const loadWeek3Progress = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('csca-week3-progress-v1'))
+    return { completed: saved?.completed || {}, skipped: {}, scores: saved?.scores || {}, testResults: saved?.testResults || {} }
+  } catch {
+    return { completed: {}, skipped: {}, scores: {}, testResults: {} }
+  }
+}
+
 export default function App() {
   const [path, setPath] = useState(window.location.pathname)
   const [progress, setProgress] = useState(loadProgress)
   const [week2Progress, setWeek2Progress] = useState(loadWeek2Progress)
+  const [week3Progress, setWeek3Progress] = useState(loadWeek3Progress)
 
   useEffect(() => {
     const onPopState = async () => { if (await requireSiteSession()) setPath(window.location.pathname) }
@@ -62,6 +74,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('csca-week2-progress-v1', JSON.stringify(week2Progress))
   }, [week2Progress])
+
+  useEffect(() => {
+    localStorage.setItem('csca-week3-progress-v1', JSON.stringify(week3Progress))
+  }, [week3Progress])
 
   const navigate = async (nextPath) => {
     if (!await requireSiteSession()) return
@@ -117,6 +133,34 @@ export default function App() {
   if (path === '/week-1/whiteboard') return <WhiteboardPage navigate={navigate} />
   if (path === '/week-1/final-test') return <FinalTestPage navigate={navigate} onFinish={saveFinal} onSkip={skipFinal} />
   if (path === '/week-1/final-result') return <FinalResultPage navigate={navigate} result={progress.finalResult} />
+
+  if (path === '/week-3' || path.startsWith('/week-3/')) {
+    const completeWeek3 = (id, stage) => setWeek3Progress((current) => ({ ...current, completed: { ...current.completed, [id + ':' + stage]: true } }))
+    const match = path.match(/^\/week-3\/([^/]+)\/(lecture|examples|practice|mini-test)$/)
+    const mini = match ? findWeek3Subtopic(match[1]) : null
+    const stage = match?.[2]
+    const selectedTopic = week3.lessons.find((item) => path === '/week-3/' + item.id)
+    const percent = Math.round(week3ProgressKeys.filter((key) => week3Progress.completed[key]).length / week3ProgressKeys.length * 100)
+    let content
+    if (selectedTopic) {
+      content = <Week2TopicPage item={selectedTopic} courseWeek={week3} navigate={navigate} progress={week3Progress} />
+    } else if (mini) {
+      const stagePaths = getWeek3StagePaths(mini)
+      const nextMini = allWeek3Subtopics[allWeek3Subtopics.findIndex((item) => item.id === mini.id) + 1]
+      if (stage === 'lecture') {
+        content = <Week2LecturePage key={mini.id} mini={mini} courseWeek={week3} navigate={navigate} progress={week3Progress} onComplete={completeWeek3} />
+      } else if (stage === 'examples') {
+        content = <Week2ExamplesPage topic={mini} courseWeek={week3} navigate={navigate} progress={week3Progress} onComplete={completeWeek3} />
+      } else if (stage === 'practice') {
+        content = <PracticePage key={mini.id + '-practice'} topic={mini} navigate={navigate} progress={week3Progress} onComplete={completeWeek3} weekId="week-3" stageConfig={week3.stages} stagePaths={stagePaths} nextDestination={stagePaths['mini-test']} nextLabel="Перейти к Mini Test" allowRetry />
+      } else {
+        content = <MiniTestPage key={mini.id + '-test'} title={'Mini Test · ' + mini.titleRu} questions={mini.miniTestQuestions} weekNumber={3} subtopicNumber={mini.number} navigate={navigate} backPath={'/week-3/' + mini.lessonId} lecturePath={stagePaths.lecture} savedResult={week3Progress.testResults[mini.id]} resultMessages={mini.resultMessages} reviewAll nextPath={nextMini ? '/week-3/' + nextMini.id + '/lecture' : '/week-3'} nextLabel={nextMini ? 'Следующая подтема · ' + nextMini.number : 'Завершить Week 3'} stageHeader={<SubtopicHeader topic={mini} stage="mini-test" navigate={navigate} progress={week3Progress} weekId="week-3" stageConfig={week3.stages} stagePaths={stagePaths} />} onFinish={(result) => setWeek3Progress((current) => ({ ...current, completed: { ...current.completed, [mini.id + ':mini-test']: true }, scores: { ...current.scores, [mini.id]: result }, testResults: { ...current.testResults, [mini.id]: result } }))} />
+      }
+    } else {
+      content = <Week2OverviewPage courseWeek={week3} navigate={navigate} progress={week3Progress} progressPercent={percent} />
+    }
+    return <LearningLayout navigate={navigate} currentPath={path} progress={week3Progress} progressPercent={percent} week={week3}>{content}</LearningLayout>
+  }
 
   if (path === '/week-2' || path.startsWith('/week-2/')) {
     const completeWeek2 = (id, stage) => setWeek2Progress((current) => ({ ...current, completed: { ...current.completed, [id + ':' + stage]: true } }))

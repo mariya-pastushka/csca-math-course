@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
 import MathFormula from './MathFormula'
 import MathAnswerInput from './MathAnswerInput'
 import MathVisual from './MathVisual'
 import { Check, Close } from './Icons'
 import { SolutionReveal } from './LearningCards'
 import { isCorrectAnswer } from '../utils/answers'
+import TaskPrompt from './TaskPrompt'
 
 export { isCorrectAnswer }
 
@@ -21,46 +21,13 @@ export default function QuestionCard({
   hideFeedback = false,
   showSkill = true,
 }) {
-  const [translationOpen, setTranslationOpen] = useState(false)
-
-  useEffect(() => {
-    setTranslationOpen(false)
-  }, [question.id])
-
   return (
     <article className={'question-card ' + (serious ? 'question-serious ' : '') + (checked ? (correct ? 'is-correct' : 'is-incorrect') : '')}>
       <div className="question-label">
         <span>{question.difficulty}</span>
         {showSkill && <small>{question.skill}</small>}
       </div>
-      <div className="question-prompt-row">
-        <h2>{question.question}</h2>
-        {question.translationRu && (
-          <button
-            type="button"
-            className={'translation-toggle ' + (translationOpen ? 'is-open' : '')}
-            aria-expanded={translationOpen}
-            onClick={() => setTranslationOpen((open) => !open)}
-          >
-            {translationOpen ? 'Скрыть перевод' : 'Перевод'}
-          </button>
-        )}
-      </div>
-      {question.translationRu && translationOpen && (
-        <div className="question-translation">
-          <span>Русский перевод</span>
-          <p>{question.translationRu}</p>
-          {question.optionTranslationsRu && question.options && (
-            <div className="translated-options">
-              {question.options.map((option, index) => (
-                <small key={option}>
-                  <strong>{String.fromCharCode(65 + index)})</strong> {question.optionTranslationsRu[option]}
-                </small>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      <TaskPrompt text={question.question} resetKey={question.id} {...{ translationRu: question.translationRu, translationKk: question.translationKk, options: question.options, optionTranslationsRu: question.optionTranslationsRu, optionTranslationsKk: question.optionTranslationsKk }} />
       {question.formula && <MathFormula className="question-formula">{question.formula}</MathFormula>}
       {question.visual && <MathVisual visual={question.visual} />}
 

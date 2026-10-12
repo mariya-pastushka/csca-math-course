@@ -3991,7 +3991,8 @@ a {
   font-weight: 700;
 }
 
-.worked-problem > p {
+.worked-problem > p,
+.worked-problem .question-prompt-row > p {
   margin: 10px 0;
   color: #5b6853;
   font-size: 13px;

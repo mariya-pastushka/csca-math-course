@@ -38,7 +38,7 @@ export default function CourseSidebar({
 
   useEffect(() => {
     if (!activeTopic) {
-      if (week.number === 2) {
+      if (week.number !== 1) {
         const activeLesson = week.lessons.find((lesson) => currentPath.includes('/' + lesson.id))
         if (activeLesson) setOpenLessons({ [activeLesson.id]: true })
       }
@@ -95,11 +95,11 @@ export default function CourseSidebar({
             >
               <summary onClick={(event) => {
                 event.preventDefault()
-                go(week.number === 2 ? rootPath + '/' + lesson.id : rootPath + '/' + lesson.subtopics[0].id + '/theory')
+                go(week.number !== 1 ? rootPath + '/' + lesson.id : rootPath + '/' + lesson.subtopics[0].id + '/theory')
               }}>
                 <span className="lesson-number">{lesson.number}</span>
                 <span>
-                  <small>{week.number === 2 ? 'Тема' : 'Урок'} {lesson.number}</small>
+                  <small>{week.number !== 1 ? 'Тема' : 'Урок'} {lesson.number}</small>
                   {lesson.titleRu}
                 </span>
               </summary>
@@ -116,7 +116,7 @@ export default function CourseSidebar({
                     >
                       <summary className={isCurrent ? 'is-current' : ''} onClick={(event) => {
                         event.preventDefault()
-                        go(rootPath + '/' + subtopic.id + (week.number === 2 ? '/lecture' : '/theory'))
+                        go(rootPath + '/' + subtopic.id + (week.number !== 1 ? '/lecture' : '/theory'))
                       }}>
                         <span className={'topic-status ' + (done ? 'is-done' : '')}>{done ? <Check size={13} /> : subtopic.number}</span>
                         <span>{subtopic.titleRu}</span>
@@ -154,10 +154,10 @@ export default function CourseSidebar({
             </span>
             {progress.finalResult && <span className="final-score">{progress.finalResult.score}/15</span>}
             {!progress.finalResult && progress.finalSkipped && <span className="final-score">↷</span>}
-          </button> : <button className="sidebar-final" onClick={() => go('/week-2/' + activeWeek2Topic.id + '/mini-test')}>
+          </button> : week.number === 2 ? <button className="sidebar-final" onClick={() => go('/week-2/' + activeWeek2Topic.id + '/mini-test')}>
             <Flag size={18} /><span><small>Topic {activeWeek2Topic.number} · Итог</small>Mini Test</span>
-            {activeTestResult && <span className="final-score">{activeTestResult.score}/8</span>}
-          </button>}
+            {activeTestResult && <span className="final-score">{activeTestResult.score}/{activeTestResult.total}</span>}
+          </button> : null}
         </div>
       </aside>
     </>

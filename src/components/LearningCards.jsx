@@ -1,6 +1,7 @@
 import MathFormula from './MathFormula'
 import { ChevronDown } from './Icons'
 import MathVisual from './MathVisual'
+import TaskPrompt from './TaskPrompt'
 
 export function VocabularyCard({ item }) {
   return (
@@ -85,7 +86,7 @@ export function WorkedExample({ item, index }) {
       </header>
       <div className="worked-problem">
         <span>Задание</span>
-        {item.prompt && <p>{item.prompt}</p>}
+        {item.prompt && (item.translationKk ? <TaskPrompt as="p" text={item.prompt} translationKk={item.translationKk} resetKey={item.id || item.problem} /> : <p>{item.prompt}</p>)}
         <MathFormula>{item.problem}</MathFormula>
         {item.visual && <MathVisual visual={item.visual} />}
       </div>

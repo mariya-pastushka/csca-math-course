@@ -12,9 +12,9 @@ export default function SubtopicHeader({ topic, stage, navigate, progress, onSki
   return (
     <header className="subtopic-header">
       <div className="breadcrumbs">
-        <button onClick={() => navigate('/' + weekId)}>{weekId === 'week-1' ? 'Week 1' : 'Week 2'}</button>
+        <button onClick={() => navigate('/' + weekId)}>{weekId.replace('week-', 'Week ')}</button>
         <span>/</span>
-        <span>{weekId === 'week-1' ? 'Урок' : 'Тема'} {topic.lesson.number}</span>
+        {weekId === 'week-3' ? <button onClick={() => navigate('/' + weekId + '/' + topic.lesson.id)}>Тема {topic.lesson.number} · Все подтемы</button> : <span>{weekId === 'week-1' ? 'Урок' : 'Тема'} {topic.lesson.number}</span>}
         <span>/</span>
         <strong>{topic.titleRu}</strong>
       </div>
