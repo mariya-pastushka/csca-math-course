@@ -46,7 +46,20 @@ export default function MiniTestPage({ title, questions: sourceQuestions, naviga
       <section className="final-result-hero"><span>{title} · Результат</span><h1>{result.score} <small>/ {result.total}</small></h1><div className="final-percentage">{percentage}%</div><h2>{resultMessages?.[feedbackKey] || feedback[feedbackKey]}</h2><p>{result.wrongSkills.length ? 'Посмотрите, какие навыки стоит повторить, и разберите ошибки по шагам.' : (resultMessages ? 'Все ' + result.total + ' заданий решены верно.' : 'Вы уверенно применяете уравнения и системы к разным условиям.')}</p></section>
       <div className="result-stats"><div><Check /><span>Верно<strong>{result.score}</strong></span></div><div><Close /><span>Ошибки<strong>{result.total - result.score}</strong></span></div><div><span className="percent-icon">%</span><span>Результат<strong>{percentage}%</strong></span></div></div>
       <section className="review-topics"><span>Что повторить</span><h2>{result.wrongSkills.length ? 'Вернитесь к этим навыкам' : 'Все задания решены верно'}</h2>{result.wrongSkills.length > 0 && <ul>{result.wrongSkills.map((skill) => <li key={skill}>{skill}</li>)}</ul>}</section>
-      {reviewQuestions.length > 0 && <section className="mistakes-review"><button className="secondary-button" onClick={() => setReviewOpen((open) => !open)}>{reviewOpen ? 'Скрыть решения' : reviewAll ? 'Все ответы и решения' : 'Разобрать ошибки'}</button>{reviewOpen && <div className="mistake-list">{reviewQuestions.map((item) => <article key={item.id}><TaskPrompt as="h3" text={item.question} translationKk={item.translationKk} />{item.formula && <MathFormula>{item.formula}</MathFormula>}<p className="your-answer">Ваш ответ: <strong>{result.attempts.find((attempt) => attempt.questionId === item.id)?.answer}</strong>{reviewAll && <span> · {result.attempts.find((attempt) => attempt.questionId === item.id)?.correct ? 'Верно ✓' : 'Неверно ✕'}</span>}</p>{reviewAll && <p>Правильный ответ: <strong>{item.answer}</strong></p>}<SolutionSteps steps={item.solution} explanation={item.explanation} /></article>)}</div>}</section>}
+      {reviewQuestions.length > 0 && <section className="mistakes-review">
+        <button className="secondary-button" onClick={() => setReviewOpen((open) => !open)}>{reviewOpen ? 'Скрыть решения' : reviewAll ? 'Все ответы и решения' : 'Разобрать ошибки'}</button>
+        {reviewOpen && <div className="mistake-list">{reviewQuestions.map((item) => {
+          const attempt = result.attempts.find((entry) => entry.questionId === item.id)
+          return <article key={item.id}>
+            <TaskPrompt as="h3" text={item.question} translationKk={item.translationKk} />
+            {item.formula && <MathFormula>{item.formula}</MathFormula>}
+            <p className="your-answer">Ваш ответ: <strong>{attempt?.answer}</strong>{reviewAll && <span> · {attempt?.correct ? 'Верно ✓' : 'Неверно ✕'}</span>}</p>
+            {reviewAll && <p>Правильный ответ: <strong>{item.answer}</strong></p>}
+            {item.optionFeedback?.[attempt?.answer] && <p className="your-answer">{item.optionFeedback[attempt.answer]}</p>}
+            <SolutionSteps steps={item.solution} explanation={item.explanation} />
+          </article>
+        })}</div>}
+      </section>}
       <div className="result-actions"><button className="secondary-button" onClick={retry}><Rotate /> Пройти ещё раз</button><button className="secondary-button" onClick={() => navigate(lecturePath)}>Повторить лекцию</button><button className={nextPath ? 'secondary-button' : 'primary-button'} onClick={() => navigate(backPath)}>Вернуться к теме</button>{nextPath && <button className="primary-button" onClick={() => navigate(nextPath)}>{nextLabel} <ArrowRight /></button>}</div>
     </div></div>
   }

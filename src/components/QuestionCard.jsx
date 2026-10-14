@@ -68,7 +68,7 @@ export default function QuestionCard({
           {correct ? <Check /> : <Close />}
           <div>
             <strong>{correct ? 'Верно!' : 'Пока неверно'}</strong>
-            <span>{question.feedbackExplanation || (correct ? 'Отлично, правило применено правильно.' : 'Это нормальная часть обучения. Разберите решение по шагам.')}</span>
+            <span>{question.optionFeedback?.[value] || question.feedbackExplanation || (correct ? 'Отлично, правило применено правильно.' : 'Это нормальная часть обучения. Разберите решение по шагам.')}</span>
             {question.feedbackExplanation && <span className="correct-answer-text">Правильный ответ: {Array.isArray(question.answer) ? question.answer.join('; ') : question.answer}</span>}
           </div>
         </div>

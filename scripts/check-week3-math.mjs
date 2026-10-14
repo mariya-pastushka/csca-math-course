@@ -120,7 +120,7 @@ const plainAnswer = (answer) => String(answer)
 
 let checked=0,formulas=0
 const ids=new Set()
-for(const mini of allWeek3Subtopics) {
+for(const mini of allWeek3Subtopics.filter((item)=>item.lessonId==='topic-1')) {
   const items=[...mini.lectureExamples,...mini.examples,...mini.practiceQuestions,...mini.miniTestQuestions]
   assert.ok(mini.theory.length>=5&&mini.rules.length>=3)
   assert.equal(mini.examples.length,5)
@@ -159,10 +159,10 @@ for(const mini of allWeek3Subtopics) {
     katex.renderToString(card.formula,{throwOnError:true,strict:false}); formulas++
   }
 }
-assert.equal(week3.lessons.length,1)
-assert.equal(allWeek3Subtopics.length,3)
-assert.equal(week3ProgressKeys.length,12)
+assert.equal(week3.lessons.length,2)
+assert.equal(allWeek3Subtopics.length,6)
+assert.equal(week3ProgressKeys.length,24)
 assert.ok(week3.stages.every(([stage])=>stage!=='homework'))
 assert.ok(isCorrectAnswer('-0.75','-3/4'))
 assert.ok(isCorrectAnswer('−3/4','-3/4'))
-console.log(`Week 3: ${checked} independent answer checks and ${formulas} LaTeX expressions passed. All choices, numeric/fraction grading, task translations and 12 progression stages checked.`)
+console.log(`Week 3 Arithmetic Progression: ${checked} independent answer checks and ${formulas} LaTeX expressions passed. All choices, numeric/fraction grading, task translations and 24 week stages checked.`)

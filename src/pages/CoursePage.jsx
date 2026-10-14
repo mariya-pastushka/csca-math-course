@@ -13,7 +13,7 @@ export default function CoursePage({ navigate }) {
       <section className="course-entry">
         <span className="course-index">ПРОГРАММА ПОДГОТОВКИ</span>
         <h2>Начните с прочного фундамента.</h2>
-        <p>Выберите неделю: от вычислительной базы к уравнениям, неравенствам и арифметической прогрессии.</p>
+        <p>Выберите неделю: от вычислительной базы к уравнениям, неравенствам и прогрессиям.</p>
         <div className="course-weeks">
         <button className="week-entry-button" onClick={() => navigate('/week-1')}>
           <span className="week-entry-number">01</span>
@@ -33,7 +33,7 @@ export default function CoursePage({ navigate }) {
         </button>
         <button className="week-entry-button" onClick={() => navigate('/week-3')}>
           <span className="week-entry-number">03</span>
-          <span className="week-entry-copy"><small>Арифметическая прогрессия · 3 подтемы</small><strong>Week 3</strong><em>Arithmetic and Geometric Progressions</em></span>
+          <span className="week-entry-copy"><small>Две прогрессии · 6 подтем</small><strong>Week 3</strong><em>Arithmetic and Geometric Progressions</em></span>
           <span className="week-entry-arrow"><ArrowRight size={24} /></span>
         </button>
         </div>
